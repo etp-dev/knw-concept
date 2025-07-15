@@ -1,7 +1,5 @@
-[{
-  "ParameterKey": "CollectionId",
-  "ParameterValue": "$[taskcat_random-string]"
-},{
-  "ParameterKey": "CreateCloudFrontDistribution",
-  "ParameterValue": "false"
-}]
+template-file-path: src/cfn/template.yaml
+parameters:
+  CreateCloudFrontDistribution: 'true'
+  CollectionId: RekogDemo
+tags: {}
