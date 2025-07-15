@@ -29,16 +29,29 @@ const App = () => {
   const [happyometer, setHappyometer] = useState(50)
   const [readyToStream, setReadyToStream] = useState(false)
   const [webcamCoordinates, setWebcamCoordinates] = useState({})
+  const [darkMode, setDarkMode] = useState(false)
 
   const iterating = useRef(false)
   const people = useRef([])
   const webcam = useRef(undefined)
 
+  // Toggle dark mode by adding/removing the 'dark' class on <html>
+  const handleDarkModeToggle = () => {
+    setDarkMode((prev) => {
+      const next = !prev
+      if (next) {
+        document.documentElement.classList.add("dark")
+      } else {
+        document.documentElement.classList.remove("dark")
+      }
+      return next
+    })
+  }
+
   const addUser = (params) => gateway.addUser(params)
 
   const getSnapshot = () => {
     setWebcamCoordinates(findDOMNode(webcam.current).getBoundingClientRect())
-
     const image = webcam.current.getScreenshot()
     const b64Encoded = image.split(",")[1]
 
@@ -114,6 +127,8 @@ const App = () => {
         toggleRekognition={toggleRekognition}
         addUser={addUser}
         readyToStream={readyToStream}
+        setMode={handleDarkModeToggle}
+        mode={darkMode ? "dark" : "light"}
       />
       <ConsentModal />
       <Grid>

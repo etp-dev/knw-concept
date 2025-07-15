@@ -1,22 +1,13 @@
-import React, { useState } from "react"
-import {
-  Alert,
-  Button,
-  ControlLabel,
-  FormControl,
-  FormGroup,
-  Modal,
-} from "react-bootstrap"
 
-const AddUserModal = (props) => {
-  const [show, setShow] = useState(false)
-  const [fullName, setFullName] = useState("")
-  const [jobTitle, setJobTitle] = useState("")
-  const [image, setImage] = useState(undefined)
-  const [formState, setFormState] = useState("initial")
-  const saveHandler = props.onSave
+import React from "react"
 
-  const getValidationState = (value) => (!value ? "error" : "success")
+const AddUserModal = ({ onSave, mode = "light" }) => {
+  const [show, setShow] = React.useState(false)
+  const [fullName, setFullName] = React.useState("")
+  const [jobTitle, setJobTitle] = React.useState("")
+  const [image, setImage] = React.useState(undefined)
+  const [formState, setFormState] = React.useState("initial")
+  // removed unused isDark
 
   const processImage = (file) => {
     const reader = new FileReader()
@@ -28,7 +19,7 @@ const AddUserModal = (props) => {
   const submitForm = (e) => {
     setFormState("saving")
     e.preventDefault()
-    saveHandler({ fullName, jobTitle, image })
+    onSave({ fullName, jobTitle, image })
       .then(() => setFormState("saved"))
       .catch(() => setFormState("error"))
   }
@@ -46,108 +37,88 @@ const AddUserModal = (props) => {
   return (
     <>
       <button
-        className={`text-white bg-blue-500 px-4 py-2 rounded hover:pointer ${
-          formState === "saving" ? "opacity-50" : ""
-        }`}
+        className={`px-4 py-2 rounded font-semibold shadow transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ml-5
+          bg-blue-500 text-white dark:bg-blue-800 dark:text-blue-100
+          ${formState === "saving" ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-600 dark:hover:bg-blue-900"}
+        `}
         onClick={() => toggle(true)}
-        style={{ marginLeft: "20px" }}
       >
         Add a new user
       </button>
 
-      <Modal show={show} onHide={toggle} style={{ color: "#000" }}>
-        <Modal.Header closeButton>
-          <Modal.Title>Add a new user</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>
-            By uploading a picture and associating it with a name, Amazon
-            Rekognition can recognize that person.
-          </p>
-          <hr />
-          <Alert
-            bsStyle="warning"
-            style={{
-              display: formState === "saving" ? "block" : "none",
-            }}
-          >
-            Please wait
-          </Alert>
-          <Alert
-            bsStyle="danger"
-            style={{
-              display: formState === "error" ? "block" : "none",
-            }}
-          >
-            An error happened. Retry.
-          </Alert>
-          <Alert
-            bsStyle="success"
-            style={{
-              display: formState === "saved" ? "block" : "none",
-            }}
-          >
-            The user has been added.
-          </Alert>
-          <form
-            style={{
-              display: formState === "initial" ? "block" : "none",
-            }}
-          >
-            <FormGroup
-              controlId="fullName"
-              validationState={getValidationState(fullName)}
+      {show && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+          <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6 relative text-gray-900 dark:text-gray-100">
+            <button
+              className="absolute top-2 right-2 text-lg font-bold px-2 py-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
+              onClick={() => toggle(false)}
             >
-              <ControlLabel>Full name</ControlLabel>
-              <FormControl
-                type="text"
-                value={fullName}
-                placeholder="Full Name e.g. Jane Doe"
-                onChange={(e) => setFullName(e.target.value)}
-              />
-              <FormControl.Feedback />
-            </FormGroup>
-            <FormGroup
-              controlId="jobTitle"
-              validationState={getValidationState(jobTitle)}
-            >
-              <ControlLabel>Job Title</ControlLabel>
-              <FormControl
-                type="text"
-                value={jobTitle}
-                placeholder="Job Title e.g. CEO"
-                onChange={(e) => setJobTitle(e.target.value)}
-              />
-              <FormControl.Feedback />
-            </FormGroup>
-            <FormGroup
-              controlId="image"
-              validationState={getValidationState(image)}
-            >
-              <ControlLabel>Photo</ControlLabel>
-              <FormControl
-                type="file"
-                onChange={(e) => processImage(e.target.files[0])}
-                id="image"
-              />
-              <FormControl.Feedback />
-            </FormGroup>
-          </form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            onClick={submitForm}
-            type="submit"
-            disabled={
-              !fullName || !jobTitle || !image || formState !== "initial"
-            }
-            show="false"
-          >
-            Add User
-          </Button>
-          <Button onClick={toggle}>Close</Button>
-        </Modal.Footer>
-      </Modal>
+              ×
+            </button>
+            <h2 className="text-xl font-bold mb-2">Add a new user</h2>
+            <p className="mb-2 text-sm">By uploading a picture and associating it with a name, Amazon Rekognition can recognize that person.</p>
+            <hr className="mb-2" />
+            {formState === "saving" && (
+              <div className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100 px-3 py-2 rounded mb-2">Please wait...</div>
+            )}
+            {formState === "error" && (
+              <div className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100 px-3 py-2 rounded mb-2">An error happened. Retry.</div>
+            )}
+            {formState === "saved" && (
+              <div className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100 px-3 py-2 rounded mb-2">The user has been added.</div>
+            )}
+            {formState === "initial" && (
+              <form onSubmit={submitForm}>
+                <div className="mb-3">
+                  <label className="block mb-1 font-medium">Full name</label>
+                  <input
+                    type="text"
+                    value={fullName}
+                    placeholder="Full Name e.g. Jane Doe"
+                    onChange={(e) => setFullName(e.target.value)}
+                    className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white border-gray-300 text-gray-900 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700"
+                  />
+                </div>
+                <div className="mb-3">
+                  <label className="block mb-1 font-medium">Job Title</label>
+                  <input
+                    type="text"
+                    value={jobTitle}
+                    placeholder="Job Title e.g. CEO"
+                    onChange={(e) => setJobTitle(e.target.value)}
+                    className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white border-gray-300 text-gray-900 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700"
+                  />
+                </div>
+                <div className="mb-3">
+                  <label className="block mb-1 font-medium">Photo</label>
+                  <input
+                    type="file"
+                    onChange={(e) => processImage(e.target.files[0])}
+                    id="image"
+                    className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white border-gray-300 text-gray-900 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700"
+                  />
+                </div>
+                <div className="flex gap-2 mt-4">
+                  <button
+                    type="submit"
+                    disabled={!fullName || !jobTitle || !image || formState !== "initial"}
+                    className="px-4 py-2 rounded font-semibold shadow transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-blue-500 text-white dark:bg-blue-800 dark:text-blue-100 hover:bg-blue-600 dark:hover:bg-blue-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Add User
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => toggle(false)}
+                    className="px-4 py-2 rounded font-semibold shadow transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-gray-200 text-gray-900 dark:bg-gray-800 dark:text-gray-100"
+                  >
+                    Close
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
     </>
   )
 }
