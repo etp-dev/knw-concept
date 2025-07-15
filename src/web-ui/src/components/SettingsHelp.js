@@ -4,12 +4,17 @@ import React from "react"
 const SettingsHelp = ({ show }) => {
   if (!show) return null
   return (
-    <div className="w-full flex justify-center my-4">
+    <div className="w-full flex justify-center my-6">
       <div
-        className="border rounded px-4 py-3 text-center shadow bg-red-100 text-red-900 border-red-300 dark:bg-red-900 dark:text-red-100 dark:border-red-700"
+        className="border-l-4 border-red-500 rounded-xl px-6 py-4 text-center shadow-lg bg-red-50 text-red-800 dark:bg-red-900/80 dark:text-red-100 backdrop-blur-sm max-w-lg"
         role="alert"
       >
-        There is an issue with your settings configuration.
+        <div className="flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+          </svg>
+          <span>There is an issue with your settings configuration.</span>
+        </div>
       </div>
     </div>
   )

@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react"
-import { Col, Grid, Row } from "react-bootstrap"
 import { findDOMNode } from "react-dom"
 import GaugeChart from "react-gauge-chart"
 import Webcam from "react-webcam"
@@ -122,7 +121,7 @@ const App = () => {
   }
 
   return (
-    <div className="App">
+    <div className="App bg-gray-50 dark:bg-gray-900 min-h-screen">
       <Header
         toggleRekognition={toggleRekognition}
         addUser={addUser}
@@ -130,65 +129,72 @@ const App = () => {
         setMode={handleDarkModeToggle}
         mode={darkMode ? "dark" : "light"}
       />
-      <ConsentModal />
-      <Grid>
+      <ConsentModal mode={darkMode ? "dark" : "light"} />
+      <div className="container mx-auto px-4 py-6">
         <SettingsHelp show={!window.rekognitionSettings} />
-        <CameraHelp show={!readyToStream} />
-        <Row>
-          <Col md={12} sm={6}>
-            <Grid>
-              <Row>
-                <Col md={8} sm={6}>
-                  <Webcam
-                    ref={setupWebcam}
-                    screenshotFormat="image/jpeg"
-                    videoConstraints={{
-                      width: 1280,
-                      height: 640,
-                      facingMode: "user",
-                    }}
-                    width="100%"
-                    height="100%"
+        <CameraHelp show={!readyToStream} mode={darkMode ? "dark" : "light"} />
+        
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
+          <div className="lg:col-span-8">
+            <div className="rounded-2xl overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700">
+              <Webcam
+                ref={setupWebcam}
+                screenshotFormat="image/jpeg"
+                videoConstraints={{
+                  width: 1280,
+                  height: 640,
+                  facingMode: "user",
+                }}
+                width="100%"
+                height="100%"
+                className="w-full"
+              />
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+                <h3 className="text-xl font-semibold mb-5 text-gray-800 dark:text-gray-200">Trends for last hour</h3>
+                <PolarChart
+                  data={Object.keys(aggregate).map((sentiment) => ({
+                    x: sentiment,
+                    y: aggregate[sentiment],
+                  }))}
+                  mode={darkMode ? "dark" : "light"}
+                />
+              </div>
+              
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+                <h3 className="text-xl font-semibold mb-5 text-gray-800 dark:text-gray-200">Engagement Meter</h3>
+                <div className="p-4">
+                  <GaugeChart
+                    id="gauge-chart1"
+                    percent={happyometer / 100}
+                    nrOfLevels={20}
+                    colors={["#FF5F6D", "#FFC371"]}
+                    animate={false}
+                    cornerRadius={6}
+                    arcWidth={0.3}
+                    textColor={darkMode ? "#e0e0e0" : "#333333"}
                   />
-                  <Grid>
-                    <Row style={{ marginTop: "20px" }}>
-                      <Col md={4} sm={3}>
-                        <h3>Trends for last hour</h3>
-                        <PolarChart
-                          data={Object.keys(aggregate).map((sentiment) => ({
-                            x: sentiment,
-                            y: aggregate[sentiment],
-                          }))}
-                        />
-                      </Col>
-                      <Col md={4} sm={3}>
-                        <h3 style={{ marginBottom: "40px" }}>
-                          Engagement Meter
-                        </h3>
-                        <GaugeChart
-                          id="gauge-chart1"
-                          percent={happyometer / 100}
-                          nrOfLevels={20}
-                          colors={["#FF5F6D", "#FFC371"]}
-                          animate={false}
-                        />
-                      </Col>
-                    </Row>
-                  </Grid>
-                </Col>
-                <Col md={4} sm={6}>
-                  <EngagementSummary
-                    detectedFaces={detectedFaces}
-                    detectedPeople={detectedPeople}
-                    showFaceBoundingBoxes={iterating.current}
-                    webcamCoordinates={webcamCoordinates}
-                  />
-                </Col>
-              </Row>
-            </Grid>
-          </Col>
-        </Row>
-      </Grid>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="lg:col-span-4">
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 h-full">
+              <h3 className="text-xl font-semibold mb-5 text-gray-800 dark:text-gray-200">Analysis Results</h3>
+              <EngagementSummary
+                detectedFaces={detectedFaces}
+                detectedPeople={detectedPeople}
+                showFaceBoundingBoxes={iterating.current}
+                webcamCoordinates={webcamCoordinates}
+                mode={darkMode ? "dark" : "light"}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
