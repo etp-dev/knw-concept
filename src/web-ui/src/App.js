@@ -130,13 +130,15 @@ const App = () => {
         mode={darkMode ? "dark" : "light"}
       />
       <ConsentModal mode={darkMode ? "dark" : "light"} />
-      <div className="container mx-auto px-4 py-6">
-        <SettingsHelp show={!window.rekognitionSettings} />
-        <CameraHelp show={!readyToStream} mode={darkMode ? "dark" : "light"} />
+      <div className="w-full px-6 lg:px-10 py-8 max-w-[1920px] mx-auto">
+        <div className="mb-6">
+          <SettingsHelp show={!window.rekognitionSettings} />
+          <CameraHelp show={!readyToStream} mode={darkMode ? "dark" : "light"} />
+        </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-8">
           <div className="lg:col-span-8">
-            <div className="rounded-2xl overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700">
+            <div className="rounded-2xl overflow-hidden shadow-xl border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-shadow duration-300">
               <Webcam
                 ref={setupWebcam}
                 screenshotFormat="image/jpeg"
@@ -151,8 +153,8 @@ const App = () => {
               />
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+              <div className="bg-white dark:bg-gray-800 p-7 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-300">
                 <h3 className="text-xl font-semibold mb-5 text-gray-800 dark:text-gray-200">Trends for last hour</h3>
                 <PolarChart
                   data={Object.keys(aggregate).map((sentiment) => ({
@@ -163,7 +165,7 @@ const App = () => {
                 />
               </div>
               
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+              <div className="bg-white dark:bg-gray-800 p-7 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-300">
                 <h3 className="text-xl font-semibold mb-5 text-gray-800 dark:text-gray-200">Engagement Meter</h3>
                 <div className="p-4">
                   <GaugeChart
@@ -182,7 +184,7 @@ const App = () => {
           </div>
           
           <div className="lg:col-span-4">
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 h-full">
+            <div className="bg-white dark:bg-gray-800 p-7 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 h-full hover:shadow-lg transition-all duration-300">
               <h3 className="text-xl font-semibold mb-5 text-gray-800 dark:text-gray-200">Analysis Results</h3>
               <EngagementSummary
                 detectedFaces={detectedFaces}

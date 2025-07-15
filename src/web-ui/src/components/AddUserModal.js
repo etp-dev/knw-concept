@@ -37,9 +37,9 @@ const AddUserModal = ({ onSave, mode = "light" }) => {
   return (
     <>
       <button
-        className={`px-4 py-2 rounded font-semibold shadow transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ml-5
-          bg-blue-500 text-white dark:bg-blue-800 dark:text-blue-100
-          ${formState === "saving" ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-600 dark:hover:bg-blue-900"}
+        className={`px-8 py-3.5 rounded-lg font-semibold text-lg shadow-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2
+          bg-blue-500 text-white dark:bg-blue-800 dark:text-blue-100 min-w-[160px]
+          ${formState === "saving" ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-600 dark:hover:bg-blue-900 transform hover:scale-102"}
         `}
         onClick={() => toggle(true)}
       >
