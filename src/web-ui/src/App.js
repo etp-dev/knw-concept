@@ -109,7 +109,7 @@ const App = () => {
   }
 
   return (
-    <div className="App bg-black">
+    <div className="App">
       <Header
         toggleRekognition={toggleRekognition}
         addUser={addUser}

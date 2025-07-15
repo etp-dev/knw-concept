@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from "react"
 import {
   Alert,
   Button,
@@ -6,52 +6,54 @@ import {
   FormControl,
   FormGroup,
   Modal,
-} from "react-bootstrap";
+} from "react-bootstrap"
 
 const AddUserModal = (props) => {
-  const [show, setShow] = useState(false);
-  const [fullName, setFullName] = useState("");
-  const [jobTitle, setJobTitle] = useState("");
-  const [image, setImage] = useState(undefined);
-  const [formState, setFormState] = useState("initial");
-  const saveHandler = props.onSave;
+  const [show, setShow] = useState(false)
+  const [fullName, setFullName] = useState("")
+  const [jobTitle, setJobTitle] = useState("")
+  const [image, setImage] = useState(undefined)
+  const [formState, setFormState] = useState("initial")
+  const saveHandler = props.onSave
 
-  const getValidationState = (value) => (!value ? "error" : "success");
+  const getValidationState = (value) => (!value ? "error" : "success")
 
   const processImage = (file) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => setImage(reader.result.split(",")[1]);
-    reader.onerror = () => setFormState("error");
-  };
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => setImage(reader.result.split(",")[1])
+    reader.onerror = () => setFormState("error")
+  }
 
   const submitForm = (e) => {
-    setFormState("saving");
-    e.preventDefault();
+    setFormState("saving")
+    e.preventDefault()
     saveHandler({ fullName, jobTitle, image })
       .then(() => setFormState("saved"))
-      .catch(() => setFormState("error"));
-  };
+      .catch(() => setFormState("error"))
+  }
 
   const toggle = (reset) => {
-    setShow(!show);
+    setShow(!show)
     if (reset) {
-      setFormState("initial");
-      setFullName("");
-      setJobTitle("");
-      setImage(undefined);
+      setFormState("initial")
+      setFullName("")
+      setJobTitle("")
+      setImage(undefined)
     }
-  };
+  }
 
   return (
     <>
-      <Button
-        bsStyle="warning"
+      <button
+        className={`text-white bg-blue-500 px-4 py-2 rounded hover:pointer ${
+          formState === "saving" ? "opacity-50" : ""
+        }`}
         onClick={() => toggle(true)}
         style={{ marginLeft: "20px" }}
       >
         Add a new user
-      </Button>
+      </button>
 
       <Modal show={show} onHide={toggle} style={{ color: "#000" }}>
         <Modal.Header closeButton>
@@ -135,7 +137,6 @@ const AddUserModal = (props) => {
         <Modal.Footer>
           <Button
             onClick={submitForm}
-            bsStyle="primary"
             type="submit"
             disabled={
               !fullName || !jobTitle || !image || formState !== "initial"
@@ -148,7 +149,7 @@ const AddUserModal = (props) => {
         </Modal.Footer>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default AddUserModal;
+export default AddUserModal

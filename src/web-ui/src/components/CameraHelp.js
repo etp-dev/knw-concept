@@ -1,11 +1,11 @@
-import React from "react";
-import { Col, Row } from "react-bootstrap";
+import React from "react"
+import { Col, Row } from "react-bootstrap"
 
 const CameraHelp = (props) => {
-  const currentUrl = window.location.href;
+  const currentUrl = window.location.href
   if (props.show) {
     return (
-      <Row>
+      <Row className="text-white">
         <Col md={12}>
           When prompted, you need to click <i>Allow</i> to use the application
           with your webcamera.
@@ -15,9 +15,9 @@ const CameraHelp = (props) => {
           window, or review your webcam settings on your browser.
         </Col>
       </Row>
-    );
+    )
   }
-  return "";
-};
+  return ""
+}
 
-export default CameraHelp;
+export default CameraHelp
