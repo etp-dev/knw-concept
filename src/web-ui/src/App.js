@@ -1,19 +1,19 @@
-import React, { useRef, useState } from "react";
-import { findDOMNode } from "react-dom";
-import Webcam from "react-webcam";
-import { Col, Grid, Row } from "react-bootstrap";
-import GaugeChart from "react-gauge-chart";
+import React, { useRef, useState } from "react"
+import { Col, Grid, Row } from "react-bootstrap"
+import { findDOMNode } from "react-dom"
+import GaugeChart from "react-gauge-chart"
+import Webcam from "react-webcam"
 
-import CameraHelp from "./components/CameraHelp";
-import EngagementSummary from "./components/EngagementsSummary";
-import Header from "./components/Header";
-import PolarChart from "./components/PolarChart";
-import SettingsHelp from "./components/SettingsHelp";
-import ConsentModal from "./components/ConsentModal";
+import CameraHelp from "./components/CameraHelp"
+import ConsentModal from "./components/ConsentModal"
+import EngagementSummary from "./components/EngagementsSummary"
+import Header from "./components/Header"
+import PolarChart from "./components/PolarChart"
+import SettingsHelp from "./components/SettingsHelp"
 
-import faceDetailsMapper from "./utils/faceDetailsMapper";
-import getChartData from "./utils/getChartData";
-import gateway from "./utils/gateway";
+import faceDetailsMapper from "./utils/faceDetailsMapper"
+import gateway from "./utils/gateway"
+import getChartData from "./utils/getChartData"
 
 const App = () => {
   const [aggregate, setAggregate] = useState({
@@ -22,67 +22,67 @@ const App = () => {
     happy: 0,
     sad: 0,
     surprised: 0,
-  });
+  })
 
-  const [detectedFaces, setDetectedFaces] = useState([]);
-  const [detectedPeople, setDetectedPeople] = useState([]);
-  const [happyometer, setHappyometer] = useState(50);
-  const [readyToStream, setReadyToStream] = useState(false);
-  const [webcamCoordinates, setWebcamCoordinates] = useState({});
+  const [detectedFaces, setDetectedFaces] = useState([])
+  const [detectedPeople, setDetectedPeople] = useState([])
+  const [happyometer, setHappyometer] = useState(50)
+  const [readyToStream, setReadyToStream] = useState(false)
+  const [webcamCoordinates, setWebcamCoordinates] = useState({})
 
-  const iterating = useRef(false);
-  const people = useRef([]);
-  const webcam = useRef(undefined);
+  const iterating = useRef(false)
+  const people = useRef([])
+  const webcam = useRef(undefined)
 
-  const addUser = (params) => gateway.addUser(params);
+  const addUser = (params) => gateway.addUser(params)
 
   const getSnapshot = () => {
-    setWebcamCoordinates(findDOMNode(webcam.current).getBoundingClientRect());
+    setWebcamCoordinates(findDOMNode(webcam.current).getBoundingClientRect())
 
-    const image = webcam.current.getScreenshot();
-    const b64Encoded = image.split(",")[1];
+    const image = webcam.current.getScreenshot()
+    const b64Encoded = image.split(",")[1]
 
     gateway.getEngagement().then((response) => {
-      const chartData = getChartData(response);
+      const chartData = getChartData(response)
 
       if (chartData.happyometer) {
-        setHappyometer(chartData.happyometer);
+        setHappyometer(chartData.happyometer)
       }
 
       if (chartData.aggregate) {
-        setAggregate(chartData.aggregate);
+        setAggregate(chartData.aggregate)
       }
-    });
+    })
 
     gateway.detectFaces(b64Encoded).then((response) => {
       const detectedFaces = response.FaceDetails.map((person) => {
-        const result = faceDetailsMapper(person);
-        gateway.postEngagement(result).then(() => {});
-        return result;
-      });
-      setDetectedFaces(detectedFaces);
+        const result = faceDetailsMapper(person)
+        gateway.postEngagement(result).then(() => {})
+        return result
+      })
+      setDetectedFaces(detectedFaces)
 
       if (iterating.current) {
-        setTimeout(getSnapshot, 300);
+        setTimeout(getSnapshot, 300)
       }
-    });
+    })
 
     gateway.searchFaces(b64Encoded).then((response) => {
-      const detectedPeople = [];
+      const detectedPeople = []
       if (response.FaceMatches) {
         response.FaceMatches.forEach((match) => {
-          const externalImageId = match.Face.ExternalImageId;
+          const externalImageId = match.Face.ExternalImageId
           detectedPeople.push(
             people.current.find((x) => x.externalImageId === externalImageId)
-          );
-        });
+          )
+        })
       }
-      setDetectedPeople(detectedPeople);
-    });
-  };
+      setDetectedPeople(detectedPeople)
+    })
+  }
 
   const setupWebcam = (instance) => {
-    webcam.current = instance;
+    webcam.current = instance
 
     const checkIfReady = () => {
       if (
@@ -90,26 +90,26 @@ const App = () => {
         webcam.current.state &&
         webcam.current.state.hasUserMedia
       ) {
-        setReadyToStream(true);
-      } else setTimeout(checkIfReady, 250);
-    };
+        setReadyToStream(true)
+      } else setTimeout(checkIfReady, 250)
+    }
 
-    checkIfReady();
-  };
+    checkIfReady()
+  }
 
   const toggleRekognition = () => {
-    iterating.current = !iterating.current;
+    iterating.current = !iterating.current
 
     if (iterating.current) {
       gateway.getPeople().then((response) => {
-        people.current = response.people;
-        getSnapshot();
-      });
+        people.current = response.people
+        getSnapshot()
+      })
     }
-  };
+  }
 
   return (
-    <div className="App">
+    <div className="App bg-black">
       <Header
         toggleRekognition={toggleRekognition}
         addUser={addUser}
@@ -175,7 +175,7 @@ const App = () => {
         </Row>
       </Grid>
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App
